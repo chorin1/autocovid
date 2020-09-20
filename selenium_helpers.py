@@ -1,15 +1,9 @@
 from selenium.webdriver.chrome.options import Options
-from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 TIMEOUT = 10  # in seconds
-
-
-def screenshot(browser):
-    browser.save_screenshot("screenshot.png")
 
 
 def get_chrome_options() -> Options:

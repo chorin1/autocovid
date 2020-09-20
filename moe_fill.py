@@ -1,4 +1,5 @@
 import os
+from datetime import date
 
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
@@ -11,6 +12,10 @@ USERNAME = os.environ['MOE_USER']
 PASS = os.environ['MOE_PASS']
 
 
+def get_todays_date():
+    return date.today().strftime("%d%m%y")
+
+
 def sign_moe():
     browser = webdriver.Chrome(options=get_chrome_options())
     try:
@@ -21,7 +26,7 @@ def sign_moe():
         button = get_by_xpath_with_wait(browser, '//input[@type="button" and @value="מילוי הצהרת בריאות מקוונת"]')
         button.click()
 
-        # enter username and pass page
+        # enter username and password page
         log.info(browser.current_url)
         username_path = '//*[@id="HIN_USERID"]'
         password_path = '//*[@id="Ecom_Password"]'
@@ -41,9 +46,10 @@ def sign_moe():
             approve_btn = get_by_xpath_with_wait(browser, "//input[@value='אישור']")
             approve_btn.click()
 
+        # wait for at least one checkmark
         get_by_xpath_with_wait(browser, '//*[@class="fa fa-check-circle"]')
-        browser.save_screenshot("screenshot.png")
-        log.info("captured successfully")
+
+        return browser.get_screenshot_as_png()
 
     except TimeoutException as e:
         log.critical("browser timed out - ", e)

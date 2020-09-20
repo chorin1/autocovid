@@ -16,10 +16,11 @@ RUN unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
 # set display port to avoid crash
 ENV DISPLAY=:99
 
+# install requirements
 RUN pip install --upgrade pip
-
 COPY requirements.txt /app/requirements.txt
 RUN pip install -r requirements.txt
 
+# run app (configuration for single core)
 COPY . /app
-CMD python app.py
+CMD gunicorn --worker-class=gevent --worker-connections=1000 --workers=3 --bind 0.0.0.0:$PORT_APP app:app
