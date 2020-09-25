@@ -21,6 +21,6 @@ RUN pip install --upgrade pip
 COPY requirements.txt /app/requirements.txt
 RUN pip install -r requirements.txt
 
-# run app (configuration for single core)
+# copy remaining files and run
 COPY . /app
-CMD gunicorn --worker-class=gevent --worker-connections=1000 --workers=3 --bind 0.0.0.0:$PORT_APP app:app
+CMD python telegram_bot.py

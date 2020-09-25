@@ -1,5 +1,2 @@
 selenium==3.141.0
 python-telegram-bot==12.8
-Flask==1.1.2
-gunicorn==20.0.4
-gevent==20.6.2
