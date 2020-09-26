@@ -36,8 +36,10 @@ def error_handler(update: Update, context: CallbackContext):
 
 def sign(update: Update, context: CallbackContext):
     chat_id = update.message.chat_id
-    context.bot.send_chat_action(chat_id=chat_id, action="upload_photo")
+    loading_msg = context.bot.send_animation(chat_id=chat_id, width=50, height=50,
+                                             animation="https://media.giphy.com/media/xTkcEQACH24SMPxIQg/giphy.gif")
     photo_path = sign_moe()
+    loading_msg.delete()
     if photo_path is None:
         context.bot.send_message(chat_id=chat_id, text="failed :(")
         return
