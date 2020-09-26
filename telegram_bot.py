@@ -8,12 +8,13 @@ from telegram.ext import Updater, CommandHandler, CallbackContext, Filters
 from moe_fill import sign_moe
 
 log = set_logger("telegram-bot")
+TELEGRAM_TOKEN = os.environ['TELEGRAM_TOKEN']
 CHAT_ID = int(os.environ['CHAT_ID'])
 DEV_CHAT_ID = int(os.environ['DEV_CHAT_ID'])
 
 
-def start(update, context):
-    context.bot.send_message(chat_id=update.message.chat_id, text=f"chat id = {update.message.chat_id}")
+def start(update: Update, context: CallbackContext):
+    # context.bot.send_message(chat_id=update.message.chat_id, text=f"chat id = {update.message.chat_id}")
     update.message.reply_text("Welcome to Kinderbot, this bot will sign covid health certificates for you.")
 
 
@@ -33,13 +34,19 @@ def error_handler(update: Update, context: CallbackContext):
     context.bot.send_message(chat_id=DEV_CHAT_ID, text=message, parse_mode=ParseMode.HTML)
 
 
-def sign(update, context):
-    context.bot.send_chat_action(chat_id=update.message.chat_id, action="upload_photo")
-    context.bot.send_photo(chat_id=update.message.chat_id, photo=sign_moe())
+def sign(update: Update, context: CallbackContext):
+    chat_id = update.message.chat_id
+    context.bot.send_chat_action(chat_id=chat_id, action="upload_photo")
+    photo_path = sign_moe()
+    if photo_path is None:
+        context.bot.send_message(chat_id=chat_id, text="failed :(")
+        return
+    with open(photo_path, 'rb') as photo:
+        context.bot.send_photo(chat_id=chat_id, photo=photo)
 
 
 def main():
-    updater = Updater(token=os.environ['TELEGRAM_TOKEN'], use_context=True)
+    updater = Updater(token=TELEGRAM_TOKEN, use_context=True)
     dp = updater.dispatcher
 
     dp.add_handler(CommandHandler('start', start))

@@ -12,8 +12,18 @@ USERNAME = os.environ['MOE_USER']
 PASS = os.environ['MOE_PASS']
 
 
-def get_todays_date():
-    return date.today().strftime("%d%m%y")
+def get_img_path():
+    os.makedirs("__screenshots", exist_ok=True)
+    return f"/app/__screenshots/moe{date.today().strftime('%d%m%y')}.png"
+
+
+def save_screenshot(browser):
+    log.info("saving screenshot")
+    path = get_img_path()
+    success = browser.get_screenshot_as_file(path)
+    if not success:
+        return None
+    return path
 
 
 def sign_moe():
@@ -39,19 +49,21 @@ def sign_moe():
 
         # fill form page
         log.info(browser.current_url)
-        get_by_xpath_with_wait(browser, '//*[@class="day-title"]')  # wait until current date is visible
+        get_by_xpath_with_wait(browser,
+                               '//*[@class="day-title ng-star-inserted"]')  # wait until current date is visible
 
+        # approve all
         for button in browser.find_elements_by_xpath('//input[@type="button" and @value="מילוי הצהרת בריאות"]'):
             button.click()
-            approve_btn = get_by_xpath_with_wait(browser, "//input[@value='אישור']")
+            approve_btn = get_by_xpath_with_wait(browser, '//input[@value="אישור"]')
             approve_btn.click()
 
         # wait for at least one checkmark
         get_by_xpath_with_wait(browser, '//*[@class="fa fa-check-circle"]')
 
-        return browser.get_screenshot_as_png()
+        return save_screenshot(browser)
 
     except TimeoutException as e:
-        log.critical("browser timed out - ", e)
+        log.error(f"browser timed out - {e}")
     finally:
         browser.quit()
