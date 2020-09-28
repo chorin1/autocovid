@@ -2,6 +2,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 
 TIMEOUT = 10  # in seconds
 
@@ -21,4 +22,6 @@ def get_chrome_options() -> Options:
 
 
 def get_by_xpath_with_wait(browser, xpath):
-    return WebDriverWait(browser, TIMEOUT).until(EC.presence_of_element_located((By.XPATH, xpath)))
+    ignored_exceptions = (NoSuchElementException, StaleElementReferenceException)
+    return WebDriverWait(browser, TIMEOUT, ignored_exceptions=ignored_exceptions).until(
+        EC.presence_of_element_located((By.XPATH, xpath)))

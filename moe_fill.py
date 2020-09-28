@@ -54,6 +54,8 @@ def sign_moe():
 
         # approve all
         for button in browser.find_elements_by_xpath('//input[@type="button" and @value="מילוי הצהרת בריאות"]'):
+            if not button.is_displayed():
+                continue
             button.click()
             approve_btn = get_by_xpath_with_wait(browser, '//input[@value="אישור"]')
             browser.execute_script("arguments[0].click();", approve_btn)  # fixes element is not clickable error
