@@ -1,5 +1,5 @@
 # Autocovid
-A dockerized telegram bot to automate signing ministry of health covid certificates.
+A dockerized telegram bot to automate signing ministry of education covid certificates.
 <br><br>
 <kbd>
 <img src="https://user-images.githubusercontent.com/16934179/94419325-484cb280-018b-11eb-9a0b-d000795220a6.jpg" width="375" height="597">
