@@ -56,7 +56,7 @@ def sign_moe():
         for button in browser.find_elements_by_xpath('//input[@type="button" and @value="מילוי הצהרת בריאות"]'):
             button.click()
             approve_btn = get_by_xpath_with_wait(browser, '//input[@value="אישור"]')
-            approve_btn.click()
+            browser.execute_script("arguments[0].click();", approve_btn)  # fixes element is not clickable error
 
         # wait for at least one checkmark
         get_by_xpath_with_wait(browser, '//*[@class="fa fa-check-circle"]')
