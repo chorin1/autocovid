@@ -53,7 +53,8 @@ def sign_moe():
 
         # fill form page
         log.info(browser.current_url)
-        wait_for_load_completion(browser)
+        get_by_xpath_with_wait(browser,
+                               '//*[@class="day-title ng-star-inserted"]')  # wait until current date is visible
 
         # approve all
         for button in browser.find_elements_by_xpath('//input[@type="button" and @value="מילוי הצהרת בריאות"]'):
