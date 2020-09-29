@@ -30,7 +30,7 @@ def get_by_xpath_with_wait(browser: WebDriver, xpath):
 
 def wait_for_xpath_to_be_stale(browser: WebDriver, xpath):
     try:
-        elem = browser.find_elements_by_xpath(xpath)
+        elem = browser.find_element_by_xpath(xpath)
         WebDriverWait(browser, TIMEOUT).until(EC.staleness_of(elem))
     except NoSuchElementException:
         pass
