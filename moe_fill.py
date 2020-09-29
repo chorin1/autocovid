@@ -4,7 +4,7 @@ from datetime import date
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from log_helper import set_logger
-from selenium_helpers import get_chrome_options, get_by_xpath_with_wait
+from selenium_helpers import get_chrome_options, get_by_xpath_with_wait, wait_for_xpath_to_be_stale
 
 log = set_logger("MOE-covid")
 URL = "https://parents.education.gov.il/prhnet/parents/rights-obligations-regulations/health-statement-kindergarden"
@@ -18,12 +18,16 @@ def get_img_path():
 
 
 def save_screenshot(browser):
-    log.info("saving screenshot")
     path = get_img_path()
+    log.info(f"saving screenshot {path}")
     success = browser.get_screenshot_as_file(path)
     if not success:
         return None
     return path
+
+
+def wait_for_load_completion(browser):
+    wait_for_xpath_to_be_stale(browser, '//*[@class="spinner-three-bounce full-screen ng-star-inserted"]')
 
 
 def sign_moe():
@@ -49,8 +53,7 @@ def sign_moe():
 
         # fill form page
         log.info(browser.current_url)
-        get_by_xpath_with_wait(browser,
-                               '//*[@class="day-title ng-star-inserted"]')  # wait until current date is visible
+        wait_for_load_completion(browser)
 
         # approve all
         for button in browser.find_elements_by_xpath('//input[@type="button" and @value="מילוי הצהרת בריאות"]'):
@@ -60,9 +63,7 @@ def sign_moe():
             approve_btn = get_by_xpath_with_wait(browser, '//input[@value="אישור"]')
             browser.execute_script("arguments[0].click();", approve_btn)  # fixes element is not clickable error
 
-        # wait for at least one checkmark
-        get_by_xpath_with_wait(browser, '//*[@class="fa fa-check-circle"]')
-
+        wait_for_load_completion(browser)
         return save_screenshot(browser)
 
     except TimeoutException as e:
