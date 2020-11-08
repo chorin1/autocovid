@@ -40,6 +40,10 @@ def sign_moe():
         button = get_by_xpath_with_wait(browser, '//input[@type="button" and @value="מילוי הצהרת בריאות מקוונת"]')
         button.click()
 
+        # click on 'enter by username and pass' panel to enable underlying text fields
+        button = get_by_xpath_with_wait(browser, '//*[@id="blocker"]')
+        button.click()
+
         # enter username and password page
         log.info(browser.current_url)
         username_path = '//*[@id="HIN_USERID"]'
