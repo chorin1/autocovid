@@ -21,5 +21,25 @@ The following environment variables need to be set:
 
 <br>
 
-### Long version 
-Tutorial for running this bot for free on GCP - still in the works..
+### Long(er) version 
+1. Create a bot using telegram's [botfather](https://core.telegram.org/bots#creating-a-new-bot).
+    1. Use `/setcommands` in botfather to add `/sign` and `/hello` commands to your new bot.
+    2. Optionally, `/setname` and `/setuserpic` to make the bot more appealing.
+    3. Add your new bot to a private channel.
+2. Find your private channel's chat_id and your own chat_id where the bot will send errors to. There are many ways to do this, [here's one](https://gist.github.com/mraaroncruz/e76d19f7d61d59419002db54030ebe35#gistcomment-3469738) of them.
+3. Set up a new VM instance with [docker](https://docs.docker.com/engine/install/ubuntu/) (currently AWS & GCP have free-tiers with VM instances).
+4. Clone this repo to the new set up instance.
+5. Create a new file named `.env`. It should contain the list below (change the values with your own):
+   ```
+   MOE_USER=123456
+   MOE_PASS=passpass
+   TELEGRAM_TOKEN=1222222:AABBCC
+   CHAT_ID=1234567
+   DEV_CHAT_ID=123456
+   ```
+6. Run the following commands:
+
+   ```
+   sudo docker build --tag autocovid .
+   sudo docker run --env-file=.env --name whatever --detach --restart=always autocovid
+   ```
